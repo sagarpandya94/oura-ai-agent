@@ -1,12 +1,4 @@
-from api.oura_client import OuraClient
+from agents.health_agent import HealthAgent
 
-client = OuraClient()
-
-print("--- Sleep Data ---")
-print(client.get_sleep())
-
-print("--- Readiness Data ---")
-print(client.get_daily_readiness())
-
-print("--- Activity Data ---")
-print(client.get_daily_activity())
+agent = HealthAgent(provider="claude")
+print(agent.analyze())
