@@ -1,13 +1,13 @@
 import os
 import json
-import logging
 from anthropic import Anthropic
 from dotenv import load_dotenv
 from api.oura_client import OuraClient
 
 load_dotenv()
 
-logger = logging.getLogger(__name__)
+from core.logger import get_logger
+logger = get_logger(__name__)
 
 TOOLS = [
     {

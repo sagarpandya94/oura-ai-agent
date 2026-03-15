@@ -1,5 +1,4 @@
 import os
-import logging
 from dotenv import load_dotenv
 from google import genai
 from anthropic import Anthropic
@@ -7,7 +6,8 @@ from api.oura_client import OuraClient
 
 load_dotenv()
 
-logger = logging.getLogger(__name__)
+from core.logger import get_logger
+logger = get_logger(__name__)
 
 
 class HealthAgent:
