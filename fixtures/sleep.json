@@ -1,0 +1,14 @@
+{
+  "data": [
+    {
+      "id": "abc123",
+      "day": "2025-03-13",
+      "score": 82,
+      "total_sleep_duration": 27480,
+      "rem_sleep_duration": 5400,
+      "deep_sleep_duration": 4800,
+      "efficiency": 91,
+      "latency": 360
+    }
+  ]
+}

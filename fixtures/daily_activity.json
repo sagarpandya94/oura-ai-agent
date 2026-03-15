@@ -1,0 +1,13 @@
+{
+  "data": [
+    {
+      "id": "ghi789",
+      "day": "2025-03-13",
+      "score": 67,
+      "active_calories": 420,
+      "steps": 8200,
+      "equivalent_walking_distance": 6100,
+      "high_activity_time": 1800
+    }
+  ]
+}
