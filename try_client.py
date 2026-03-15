@@ -1,8 +1,7 @@
-from agents.tool_calling_agent import ToolCallingAgent
+from agents.memory_agent import MemoryAgent
 
-agent = ToolCallingAgent()
+agent = MemoryAgent()
 
-# Ask different questions and watch Claude decide which tools to call
 agent.run("How was my sleep last night?")
-agent.run("Am I ready for an intense workout today?")
-agent.run("Give me a full health summary")
+agent.run("How does that compare to my activity?")
+agent.run("What should I focus on improving?")
