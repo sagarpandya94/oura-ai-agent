@@ -1,0 +1,12 @@
+{
+  "data": [
+    {
+      "id": "def457",
+      "day": "2025-03-14",
+      "score": 35,
+      "temperature_deviation": 0.8,
+      "hrv_balance_score": 30,
+      "recovery_index_score": 40
+    }
+  ]
+}

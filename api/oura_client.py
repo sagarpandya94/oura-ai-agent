@@ -1,20 +1,26 @@
 import json
 import os
-
+import logging
 from core.logger import get_logger
+
 logger = get_logger(__name__)
 
 
 class OuraClient:
+    def __init__(self, scenario="default"):
+        self.scenario = scenario
 
     def get_sleep(self):
-        return self._load_fixture("sleep.json")
+        filename = "sleep.json" if self.scenario == "default" else f"sleep_{self.scenario}.json"
+        return self._load_fixture(filename)
 
     def get_daily_readiness(self):
-        return self._load_fixture("daily_readiness.json")
+        filename = "daily_readiness.json" if self.scenario == "default" else f"readiness_{self.scenario}.json"
+        return self._load_fixture(filename)
 
     def get_daily_activity(self):
-        return self._load_fixture("daily_activity.json")
+        filename = "daily_activity.json" if self.scenario == "default" else f"activity_{self.scenario}.json"
+        return self._load_fixture(filename)
 
     def _load_fixture(self, filename):
         fixture_path = os.path.join(
