@@ -1,10 +1,13 @@
 import os
+import logging
 from dotenv import load_dotenv
 from google import genai
 from anthropic import Anthropic
 from api.oura_client import OuraClient
 
 load_dotenv()
+
+logger = logging.getLogger(__name__)
 
 
 class HealthAgent:
@@ -20,9 +23,13 @@ class HealthAgent:
             raise ValueError(f"Unsupported provider: {provider}. Choose 'claude' or 'gemini'.")
 
     def analyze(self):
-        sleep = self.oura.get_sleep()
-        readiness = self.oura.get_daily_readiness()
-        activity = self.oura.get_daily_activity()
+        try:
+            sleep = self.oura.get_sleep()
+            readiness = self.oura.get_daily_readiness()
+            activity = self.oura.get_daily_activity()
+        except RuntimeError as e:
+            logger.error(f"Failed to fetch health data: {e}")
+            raise
 
         prompt = f"""
         You are a health analyst. Analyze the following Oura Ring health data
@@ -33,24 +40,32 @@ class HealthAgent:
         Activity Data: {activity}
         """
 
-        if self.provider == "claude":
-            return self._call_claude(prompt)
-        elif self.provider == "gemini":
-            return self._call_gemini(prompt)
+        try:
+            if self.provider == "claude":
+                return self._call_claude(prompt)
+            elif self.provider == "gemini":
+                return self._call_gemini(prompt)
+        except Exception as e:
+            logger.error(f"LLM call failed: {e}")
+            raise RuntimeError(f"Failed to get response from {self.provider}: {e}")
 
     def _call_claude(self, prompt):
-        message = self.client.messages.create(
+        response = self.client.messages.create(
             model="claude-opus-4-20250514",
             max_tokens=1024,
-            messages=[
-                {"role": "user", "content": prompt}
-            ]
+            messages=[{"role": "user", "content": prompt}]
         )
-        return message.content[0].text
+        result = response.content[0].text
+        if not result:
+            raise RuntimeError("Claude returned an empty response")
+        return result
 
     def _call_gemini(self, prompt):
         response = self.client.models.generate_content(
             model="models/gemini-2.0-flash-lite",
             contents=prompt
         )
-        return response.text
+        result = response.text
+        if not result:
+            raise RuntimeError("Gemini returned an empty response")
+        return result

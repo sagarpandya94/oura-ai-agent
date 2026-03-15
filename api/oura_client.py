@@ -1,5 +1,9 @@
 import json
 import os
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class OuraClient:
 
@@ -16,5 +20,13 @@ class OuraClient:
         fixture_path = os.path.join(
             os.path.dirname(__file__), "..", "fixtures", filename
         )
-        with open(fixture_path, "r") as f:
-            return json.load(f)
+        try:
+            with open(fixture_path, "r") as f:
+                data = json.load(f)
+                if not data.get("data"):
+                    raise ValueError(f"Empty data in fixture: {filename}")
+                return data
+        except FileNotFoundError:
+            raise RuntimeError(f"Fixture file not found: {filename}")
+        except json.JSONDecodeError:
+            raise RuntimeError(f"Invalid JSON in fixture: {filename}")
