@@ -3,6 +3,8 @@ import json
 from anthropic import Anthropic
 from dotenv import load_dotenv
 from api.oura_client import OuraClient
+from core.config import CLAUDE_MODEL, MAX_TOKENS
+
 
 load_dotenv()
 
@@ -54,8 +56,8 @@ class ToolCallingAgent:
         while True:
             try:
                 response = self.client.messages.create(
-                    model="claude-opus-4-20250514",
-                    max_tokens=1024,
+                    model=CLAUDE_MODEL,
+                    max_tokens=MAX_TOKENS,
                     tools=TOOLS,
                     messages=messages
                 )

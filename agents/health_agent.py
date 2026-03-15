@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from google import genai
 from anthropic import Anthropic
 from api.oura_client import OuraClient
+from core.config import CLAUDE_MODEL, GEMINI_MODEL, MAX_TOKENS
 
 load_dotenv()
 
@@ -51,8 +52,8 @@ class HealthAgent:
 
     def _call_claude(self, prompt):
         response = self.client.messages.create(
-            model="claude-opus-4-20250514",
-            max_tokens=1024,
+            model=CLAUDE_MODEL,
+            max_tokens=MAX_TOKENS,
             messages=[{"role": "user", "content": prompt}]
         )
         result = response.content[0].text
@@ -62,7 +63,7 @@ class HealthAgent:
 
     def _call_gemini(self, prompt):
         response = self.client.models.generate_content(
-            model="models/gemini-2.0-flash-lite",
+            model=GEMINI_MODEL,
             contents=prompt
         )
         result = response.text

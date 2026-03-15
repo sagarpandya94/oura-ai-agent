@@ -3,6 +3,9 @@ import json
 from anthropic import Anthropic
 from dotenv import load_dotenv
 from api.oura_client import OuraClient
+from core.config import CLAUDE_MODEL, MAX_TOKENS
+from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
+from anthropic import InternalServerError
 
 load_dotenv()
 
@@ -61,13 +64,7 @@ class MemoryAgent:
 
         while True:
             try:
-                response = self.client.messages.create(
-                    model="claude-opus-4-20250514",
-                    max_tokens=1024,
-                    system="You are a personal health analyst. You have memory of the entire conversation. Reference previous answers when relevant.",
-                    tools=TOOLS,
-                    messages=self.conversation_history
-                )
+                response = self._call_llm(self.conversation_history)
             except Exception as e:
                 logger.error(f"LLM call failed: {e}")
                 raise RuntimeError(f"Failed to get response from Claude: {e}")
@@ -105,3 +102,17 @@ class MemoryAgent:
                     "role": "user",
                     "content": tool_results
                 })
+
+    @retry(
+        retry=retry_if_exception_type(InternalServerError),
+        stop=stop_after_attempt(3),
+        wait=wait_exponential(multiplier=1, min=2, max=10)
+    )
+    def _call_llm(self, messages):
+        return self.client.messages.create(
+            model=CLAUDE_MODEL,
+            max_tokens=MAX_TOKENS,
+            system="You are a personal health analyst. You have memory of the entire conversation. Reference previous answers when relevant.",
+            tools=TOOLS,
+            messages=messages
+        )
