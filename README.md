@@ -1,3 +1,6 @@
+## Related Repositories
+- [Oura Mock App](https://github.com/sagarpandya94/oura-mock-app) — React Native mock dashboard used for Appium mobile testing
+
 # 🩺 Oura AI Health Agent
 
 An AI-powered agent that fetches and analyzes health data from the Oura Ring API, 
