@@ -4,3 +4,4 @@ python-dotenv
 anthropic
 google-genai
 tenacity
+Appium-Python-Client
